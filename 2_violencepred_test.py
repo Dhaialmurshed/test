@@ -77,7 +77,8 @@ import cv2
 # from google.colab.patches import cv2_imshow
 import os
 import time 
-import tensorflow as tf
+# import tensorflow as tf
+import tflite_runtime.interpreter as tflite
 # from keras.models import load_model
 from collections import deque
 print("all done")
@@ -92,7 +93,7 @@ def print_results(video, filename, limit=None):
         #     os.mkdir('output')
 
         print("Loading model ...")
-        model = tf.lite.Interpreter(model_path='model.tflite')
+        model = tflite.Interpreter(model_path='model.tflite')
 #         model = load_model('model.tflite')
         Q = deque(maxlen=128)
         vs = cv2.VideoCapture(video)
