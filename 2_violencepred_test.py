@@ -80,7 +80,7 @@ import time
 import tensorflow as tf
 # from keras.models import load_model
 from collections import deque
-
+print("all done")
 def print_results(video, filename, limit=None):
         trueCount = 0
 
