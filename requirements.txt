@@ -1,0 +1,12 @@
+
+firebase==3.0.1
+google-cloud==0.34.0
+google-cloud-bigquery==3.4.1
+google-cloud-speech==2.16.2
+google-cloud-storage==2.7.0
+google-cloud-texttospeech==2.13.0
+pycrypto==2.6.1
+Pyrebase==3.0.27
+python-jwt==2.0.1
+requests-toolbelt==0.7.0
+sseclient==0.0.27
