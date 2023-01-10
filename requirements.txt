@@ -15,3 +15,4 @@ sseclient==0.0.27
 tflite==2.10.0
 matplotlib==3.2.2
 opencv-python-headless==4.7.0.68
+tflite_runtime
