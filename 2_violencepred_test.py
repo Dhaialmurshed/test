@@ -23,7 +23,7 @@ firebaseConfig={
     "storageBucket": "rasd-d3906.appspot.com",
     "messagingSenderId": "631946154635",
     "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
-    'serviceAccount': '/content/drive/MyDrive/rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
+    'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
     }
 
 
@@ -52,7 +52,7 @@ for file in all_files:
 print("File name: " + file.name +  " Link: " + storage.child(file.name).get_url(None))
 
 # from google.auth import credentials
-cred = credentials.Certificate("/content/drive/MyDrive/rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
+cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
 firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'}) # run once ( database config )
 
 
@@ -77,6 +77,7 @@ import cv2
 from google.colab.patches import cv2_imshow
 import os
 import time 
+import tensorflow as tf
 from keras.models import load_model
 from collections import deque
 
@@ -91,8 +92,8 @@ def print_results(video, filename, limit=None):
         #     os.mkdir('output')
 
         print("Loading model ...")
-        
-        model = load_model('/content/drive/MyDrive/GP2_DS/Real Life traffic Videos DOTOD/DOTODModel.h5')
+        model = tf.lite.Interpreter(model_path='model.tflite')
+#         model = load_model('model.tflite')
         Q = deque(maxlen=128)
         vs = cv2.VideoCapture(video)
         writer = None
