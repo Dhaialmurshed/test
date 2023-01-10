@@ -1,1 +1,1 @@
-worker: python violencepred_test.py
+worker: 2_violencepred_test.py
