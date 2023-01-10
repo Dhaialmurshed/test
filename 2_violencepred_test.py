@@ -61,7 +61,7 @@ firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'})
 # storage = firebase.storage()
 db = firestore.client()
 
-from keras.models import load_model
+# from keras.models import load_model
 from collections import deque
 import matplotlib.pyplot as plt
 import numpy as np
@@ -78,7 +78,7 @@ from google.colab.patches import cv2_imshow
 import os
 import time 
 import tensorflow as tf
-from keras.models import load_model
+# from keras.models import load_model
 from collections import deque
 
 def print_results(video, filename, limit=None):
