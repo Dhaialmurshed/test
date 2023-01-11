@@ -39,13 +39,13 @@ firebaseConfig={
       "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
       'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
       }
-firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
-storage = firebase.storage() #storage
+# firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
+# storage = firebase.storage() #storage
 
-db=firestore.client()
-result = db.collection('drivers').get() #get the number of users
+db1=firestore.client()
+result = db1.collection('drivers').get() #get the number of users
 numUsers = len(result)
-print("numUsers", numUsers)
+# print("numUsers", numUsers)
 
 #git the users ids
 users = []
@@ -55,7 +55,11 @@ for i in range(numUsers):
 print(users)
 
 def predictViolation(uid):
-  print('--------------in predictViolation', uid)
+#   print('--------------in predictViolation', uid)
+  firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
+  storage = firebase.storage() #storage
+
+  db=firestore.client()
   def print_results(video, filename, limit=None):
           trueCount = 0
 
@@ -70,58 +74,64 @@ def predictViolation(uid):
           writer = None
           (W, H) = (None, None)
           count = 0
+          frameCounter = 0
+        
 
           while True:
               # read the next frame from the file
               (grabbed, frame) = vs.read()
-
+              frameCounter += 1
+#               print("frameCounter",frameCounter)
+              if frameCounter == 30:
+#                 print("last frame per seond")
               # if the frame was not grabbed, then we have reached the end of the stream
-              if not grabbed:
-                  break
+                if not grabbed:
+                    break
+                
+                # if the frame dimensions are empty, grab them
+                if W is None or H is None:
+                    (H, W) = frame.shape[:2]
+
+                # clone the output frame, then convert it from BGR to RGB
+                # ordering, resize the frame to a fixed 128x128, and then
+                # perform mean subtraction
+                
+                output = frame.copy()
               
-              # if the frame dimensions are empty, grab them
-              if W is None or H is None:
-                  (H, W) = frame.shape[:2]
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.resize(frame, (128, 128)).astype("float32")
+                frame = frame.reshape(128, 128, 3) / 255
 
-              # clone the output frame, then convert it from BGR to RGB
-              # ordering, resize the frame to a fixed 128x128, and then
-              # perform mean subtraction
+                # make predictions on the frame and then update the predictions queue
+                preds = model.predict(np.expand_dims(frame, axis=0))[0]
+                #print("preds",preds)
+                Q.append(preds)
+
+                # perform prediction averaging over the current history of previous predictions
+                results = np.array(Q).mean(axis=0)
+                i = (preds > 0.50)[0]
+                label = i
+
+                text_color = (0, 255, 0) # default : green
+
+                if label: # Violence prob
+                    # text_color = (0, 0, 255) # red
+                    trueCount = trueCount + 1 # added by dhai
+
+                # else:
+                #     text_color = (0, 255, 0)
+
+                text = "Violation: {}".format(label)
+                FONT = cv2.FONT_HERSHEY_SIMPLEX 
+
+                cv2.putText(output, text, (35, 50), FONT,1.25, text_color, 3)
+                frameCounter = 0
               
-              output = frame.copy()
-            
-              frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-              frame = cv2.resize(frame, (128, 128)).astype("float32")
-              frame = frame.reshape(128, 128, 3) / 255
-
-              # make predictions on the frame and then update the predictions queue
-              preds = model.predict(np.expand_dims(frame, axis=0))[0]
-              #print("preds",preds)
-              Q.append(preds)
-
-              # perform prediction averaging over the current history of previous predictions
-              results = np.array(Q).mean(axis=0)
-              i = (preds > 0.50)[0]
-              label = i
-
-              text_color = (0, 255, 0) # default : green
-
-              if label: # Violence prob
-                  # text_color = (0, 0, 255) # red
-                  trueCount = trueCount + 1 # added by dhai
-
-              # else:
-              #     text_color = (0, 255, 0)
-
-              text = "Violation: {}".format(label)
-              FONT = cv2.FONT_HERSHEY_SIMPLEX 
-
-              cv2.putText(output, text, (35, 50), FONT,1.25, text_color, 3) 
-
           # release the file pointersq
-          print("[INFO] cleaning up...")
+#           print("[INFO] cleaning up...")
           if(trueCount < 3): # change the thrshold 
-            storage.delete(filename) # delete the video ( if it is not violation )
-            print("deleted")
+            storage.delete(filename, token = any) # delete the video ( if it is not violation )
+#             print("deleted")
           else:
             blob = storage.bucket.blob(filename) 
             new_name =os.path.split(filename)[0]+"/"+"1_" +os.path.split(filename)[1] # change the name from filename ----> 1_filename (to indicate it is violation)
@@ -134,7 +144,7 @@ def predictViolation(uid):
             # add an empty document
             doc_ref = drivers.document(filename.split("/")[0]).collection('reports').document() # filename.split("/")[0] --> driver doc id 
             #set all the fields of the pending report
-            print(doc_ref)
+#             print(doc_ref)
             addReport = doc_ref.set({
                 'addInfo': 'null',
                 'id': doc_ref.id,
@@ -175,16 +185,18 @@ def predictViolation(uid):
 
 #this is the function that will be run for all users
 def complex_operation(input_index):
-    print('--------------in complex_operation',input_index)
+#     print('--------------in complex_operation',input_index)
     predictViolation(input_index)
 
 #this is the function that will run the code in parallel
 @timebudget
 def run_complex_operations(operation, input, pool):
     pool.map(operation, input)
+#     pool.terminate()
 
 processes_count = numUsers #the number of times the code will make instances
 
 if __name__ == '__main__':
+    os.environ['GRPC_POLL_STRATEGY']='poll'
     processes_pool = Pool(processes_count)
     run_complex_operations(complex_operation,users, processes_pool)
