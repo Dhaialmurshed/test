@@ -12,7 +12,7 @@ Pyrebase4
 python-jwt==2.0.1
 requests-toolbelt==0.7.1
 sseclient==0.0.27
-tflite==2.10.0
+tensorflow-cpu
 matplotlib==3.2.2
 opencv-python-headless==4.7.0.68
-tflite_runtime
+timebudget==0.7.1
