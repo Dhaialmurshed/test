@@ -82,7 +82,7 @@ def predictViolation(uid):
               (grabbed, frame) = vs.read()
               frameCounter += 1
 #               print("frameCounter",frameCounter)
-              if frameCounter == 30:
+              if frameCounter == 200:
 #                 print("last frame per seond")
               # if the frame was not grabbed, then we have reached the end of the stream
                 if not grabbed:
