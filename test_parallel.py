@@ -28,7 +28,7 @@ import re
 
 
 #setUp 
-cred = credentials.Certificate("rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json")
+cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
 firebase_admin.initialize_app(cred , {'storageBucket':'rasd-5e995.appspot.com'}) # run once ( database config )
 
 
@@ -40,7 +40,7 @@ firebaseConfig={
       "storageBucket": "rasd-5e995.appspot.com",
       "messagingSenderId": "99829532350",
       "appId": "1:99829532350:android:f59043fc52e74b7dc540ef",
-      'serviceAccount': 'rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json'
+      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
       }
 # firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
 # storage = firebase.storage() #storage
