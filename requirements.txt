@@ -16,3 +16,5 @@ tensorflow-cpu
 matplotlib==3.2.2
 opencv-python-headless==4.7.0.68
 timebudget==0.7.1
+DateTime==5.0
+pytz==2022.7
