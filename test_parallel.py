@@ -189,10 +189,10 @@ def predictViolation():
             #if the first number is not 1 (not predicted yet)
             #print(file.name)
             print_results(storage.child(file.name).get_url(None), file.name) # calling the model (the video not proccessed eat)
-      else:
-        #if no number found
-        #print(file.name)
-        print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
+#       else:
+#         #if no number found
+#         #print(file.name)
+#         print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
 
 #this is the function that will be run for all users
 # def complex_operation(input_index):
