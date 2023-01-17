@@ -28,19 +28,19 @@ import re
 
 
 #setUp 
-cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-5a3d387306.json")
-firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'}) # run once ( database config )
+cred = credentials.Certificate("rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json")
+firebase_admin.initialize_app(cred , {'storageBucket':'rasd-5e995.appspot.com'}) # run once ( database config )
 
 
 firebaseConfig={
-      "apiKey": "AIzaSyAN6rb8AKV_qMYknz38SVBZPcp3DGYWzzs",
-      "authDomain": "rasd-d3906.firebaseapp.com",
-      "databaseURL": "https://rasd-d3906.firebaseio.com",
-      "projectId": "rasd-d3906",
-      "storageBucket": "rasd-d3906.appspot.com",
-      "messagingSenderId": "631946154635",
-      "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
-      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-5a3d387306.json'
+      "apiKey": "AIzaSyAc6I8obzvjhKewlxzPckyu48NtBF9dx3A",
+      "authDomain": "rasd-5e995.firebaseapp.com",
+      "databaseURL": "https://rasd-5e995.firebaseio.com",
+      "projectId": "rasd-5e995",
+      "storageBucket": "rasd-5e995.appspot.com",
+      "messagingSenderId": "99829532350",
+      "appId": "1:99829532350:android:f59043fc52e74b7dc540ef",
+      'serviceAccount': 'rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json'
       }
 # firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
 # storage = firebase.storage() #storage
@@ -72,7 +72,7 @@ def predictViolation():
 
           print("Loading model ...")
           
-          model = load_model('All_Model_MobileNetV2.h5')
+          model = load_model('driftingModel.h5')
           Q = deque(maxlen=128)
           vs = cv2.VideoCapture(video)
           writer = None
@@ -133,7 +133,7 @@ def predictViolation():
               
           # release the file pointersq
 #           print("[INFO] cleaning up...")
-          if(trueCount < 3): # change the thrshold 
+          if(trueCount < -1): # change the thrshold 
             storage.delete(filename, token = any) # delete the video ( if it is not violation )
 #             print("deleted")
           else:
@@ -177,18 +177,22 @@ def predictViolation():
       if (os.path.split(file.name)[1] != ''): #only procces video files 
         str = os.path.split(file.name)[1] #get the video file name
           #print(os.path.split(file.name)[0])
-        match = re.search(r'\d+', str) #search for the any number in the file name
-        if match: #if number found
-            print('First number found:', match.group()) #get the first number
-            if(match.group() == '1'): #if already predicted skip it
-              print("not allowed")
+#         match = re.search(r'\d+', str) #search for the any number in the file name
+        match = str[0]
+        
+            #print('First number found:', match.group()) #get the first number
+#             if(match.group() == '1'): #if already predicted skip it
+        if(match == '1'):
+          print("not allowed")
               #print(os.path.split(file.name)[1])
-            else: #if the first number is not 1 (not predicted yet)
-              #print(file.name)
-              print_results(storage.child(file.name).get_url(None), file.name) # calling the model (the video not proccessed eat)
-        else: #if no number found
+        else:   
+            #if the first number is not 1 (not predicted yet)
             #print(file.name)
-            print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
+            print_results(storage.child(file.name).get_url(None), file.name) # calling the model (the video not proccessed eat)
+      else:
+        #if no number found
+        #print(file.name)
+        print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
 
 #this is the function that will be run for all users
 # def complex_operation(input_index):
