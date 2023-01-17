@@ -72,7 +72,7 @@ def predictViolation():
 
           print("Loading model ...")
           
-          model = load_model('driftingModel.h5')
+          model = load_model('All_Model_MobileNetV2.h5')
           Q = deque(maxlen=128)
           vs = cv2.VideoCapture(video)
           writer = None
