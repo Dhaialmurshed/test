@@ -15,6 +15,8 @@ from keras.models import load_model
 from collections import deque
 from timebudget import timebudget
 from multiprocessing import Pool
+from datetime import datetime
+import pytz
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
@@ -24,20 +26,21 @@ import os
 import time 
 import re
 
+
 #setUp 
-cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
-firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'}) # run once ( database config )
+cred = credentials.Certificate("rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json")
+firebase_admin.initialize_app(cred , {'storageBucket':'rasd-5e995.appspot.com'}) # run once ( database config )
 
 
 firebaseConfig={
-      "apiKey": "AIzaSyAN6rb8AKV_qMYknz38SVBZPcp3DGYWzzs",
-      "authDomain": "rasd-d3906.firebaseapp.com",
-      "databaseURL": "https://rasd-d3906.firebaseio.com",
-      "projectId": "rasd-d3906",
-      "storageBucket": "rasd-d3906.appspot.com",
-      "messagingSenderId": "631946154635",
-      "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
-      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
+      "apiKey": "AIzaSyAc6I8obzvjhKewlxzPckyu48NtBF9dx3A",
+      "authDomain": "rasd-5e995.firebaseapp.com",
+      "databaseURL": "https://rasd-5e995.firebaseio.com",
+      "projectId": "rasd-5e995",
+      "storageBucket": "rasd-5e995.appspot.com",
+      "messagingSenderId": "99829532350",
+      "appId": "1:99829532350:android:f59043fc52e74b7dc540ef",
+      'serviceAccount': 'rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json'
       }
 # firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
 # storage = firebase.storage() #storage
@@ -54,10 +57,11 @@ for i in range(numUsers):
 
 print(users)
 
-def predictViolation(uid):
+def predictViolation():
 #   print('--------------in predictViolation', uid)
   firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
   storage = firebase.storage() #storage
+  print("in predict")
 
   db=firestore.client()
   def print_results(video, filename, limit=None):
@@ -81,9 +85,9 @@ def predictViolation(uid):
               # read the next frame from the file
               (grabbed, frame) = vs.read()
               frameCounter += 1
-#               print("frameCounter",frameCounter)
-              if frameCounter == 200:
-#                 print("last frame per seond")
+             # print("frameCounter",frameCounter)
+              if frameCounter == 30:
+               # print("last frame per seond")
               # if the frame was not grabbed, then we have reached the end of the stream
                 if not grabbed:
                     break
@@ -129,7 +133,7 @@ def predictViolation(uid):
               
           # release the file pointersq
 #           print("[INFO] cleaning up...")
-          if(trueCount < 3): # change the thrshold 
+          if(trueCount < -1): # change the thrshold 
             storage.delete(filename, token = any) # delete the video ( if it is not violation )
 #             print("deleted")
           else:
@@ -138,18 +142,21 @@ def predictViolation(uid):
             #print(new_name)
             storage.bucket.rename_blob(blob, new_name=os.path.split(filename)[0]+"/"+"1_" +os.path.split(filename)[1]) # rename the file 
             #rename bucket
+            datetime_ist = datetime.now(pytz.timezone('Asia/Riyadh'))
             drivers = db.collection("drivers")
 
             # add pending report
             # add an empty document
             doc_ref = drivers.document(filename.split("/")[0]).collection('reports').document() # filename.split("/")[0] --> driver doc id 
             #set all the fields of the pending report
-#             print(doc_ref)
+            print(doc_ref)
             addReport = doc_ref.set({
                 'addInfo': 'null',
                 'id': doc_ref.id,
                 'status': 0,
-                'v_type': 'null'
+                'v_type': 'null',
+                'date': datetime_ist.strftime('%Y:%m:%d'),
+                'time': datetime_ist.strftime('%H:%M:%S '),
 
             })
             # add the video to the report (sub collection)
@@ -166,37 +173,45 @@ def predictViolation(uid):
   all_files = storage.list_files()
 
   for file in all_files:
-      if(file.name.split("/")[0] == uid): #only process videos of the sent user ID
-        if (os.path.split(file.name)[1] != ''): #only procces video files 
-          str = os.path.split(file.name)[1] #get the video file name
+#       if(file.name.split("/")[0] == uid): #only process videos of the sent user ID
+      if (os.path.split(file.name)[1] != ''): #only procces video files 
+        str = os.path.split(file.name)[1] #get the video file name
           #print(os.path.split(file.name)[0])
-          match = re.search(r'\d+', str) #search for the any number in the file name
-          if match: #if number found
-            print('First number found:', match.group()) #get the first number
-            if(match.group() == '1'): #if already predicted skip it
-              print("not allowed")
+#         match = re.search(r'\d+', str) #search for the any number in the file name
+        match = str[0]
+        
+            #print('First number found:', match.group()) #get the first number
+#             if(match.group() == '1'): #if already predicted skip it
+        if(match == '1'):
+          print("not allowed")
               #print(os.path.split(file.name)[1])
-            else: #if the first number is not 1 (not predicted yet)
-              #print(file.name)
-              print_results(storage.child(file.name).get_url(None), file.name) # calling the model (the video not proccessed eat)
-          else: #if no number found
+        else:   
+            #if the first number is not 1 (not predicted yet)
             #print(file.name)
-            print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
+            print_results(storage.child(file.name).get_url(None), file.name) # calling the model (the video not proccessed eat)
+      else:
+        #if no number found
+        #print(file.name)
+        print_results(storage.child(file.name).get_url(None), file.name) # # calling the model (the video not proccessed eat)
 
 #this is the function that will be run for all users
-def complex_operation(input_index):
-#     print('--------------in complex_operation',input_index)
-    predictViolation(input_index)
+# def complex_operation(input_index):
+# #     time.sleep(25)
+# #     print("after sleep")
+# #     print('--------------in complex_operation',input_index)
+#     predictViolation(input_index)
 
-#this is the function that will run the code in parallel
-@timebudget
-def run_complex_operations(operation, input, pool):
-    pool.map(operation, input)
-#     pool.terminate()
+# #this is the function that will run the code in parallel
+# @timebudget
+# def run_complex_operations(operation, input, pool):
+#     pool.map(operation, input)
+# #     pool.terminate()
 
 processes_count = numUsers #the number of times the code will make instances
 
 if __name__ == '__main__':
-    os.environ['GRPC_POLL_STRATEGY']='poll'
-    processes_pool = Pool(processes_count)
-    run_complex_operations(complex_operation,users, processes_pool)
+    predictViolation()
+      
+#     os.environ['GRPC_POLL_STRATEGY']='poll'
+#     processes_pool = Pool(processes_count)
+#     run_complex_operations(complex_operation,users, processes_pool)
