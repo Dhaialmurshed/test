@@ -28,19 +28,19 @@ import re
 
 
 #setUp 
-cred = credentials.Certificate("rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json")
-firebase_admin.initialize_app(cred , {'storageBucket':'rasd-5e995.appspot.com'}) # run once ( database config )
+cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-5a3d387306.json")
+firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'}) # run once ( database config )
 
 
 firebaseConfig={
-      "apiKey": "AIzaSyAc6I8obzvjhKewlxzPckyu48NtBF9dx3A",
-      "authDomain": "rasd-5e995.firebaseapp.com",
-      "databaseURL": "https://rasd-5e995.firebaseio.com",
-      "projectId": "rasd-5e995",
-      "storageBucket": "rasd-5e995.appspot.com",
-      "messagingSenderId": "99829532350",
-      "appId": "1:99829532350:android:f59043fc52e74b7dc540ef",
-      'serviceAccount': 'rasd-5e995-firebase-adminsdk-efb1r-0007b0234e.json'
+      "apiKey": "AIzaSyAN6rb8AKV_qMYknz38SVBZPcp3DGYWzzs",
+      "authDomain": "rasd-d3906.firebaseapp.com",
+      "databaseURL": "https://rasd-d3906.firebaseio.com",
+      "projectId": "rasd-d3906",
+      "storageBucket": "rasd-d3906.appspot.com",
+      "messagingSenderId": "631946154635",
+      "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
+      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-5a3d387306.json'
       }
 # firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
 # storage = firebase.storage() #storage
