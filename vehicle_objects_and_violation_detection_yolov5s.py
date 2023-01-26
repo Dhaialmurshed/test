@@ -26,7 +26,6 @@ import cv2 #
 import os # for pathes
 import time 
 import re
-import torch
 import statistics # to calculate mean and median
 
 
