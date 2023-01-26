@@ -173,17 +173,17 @@ def post_process(input_image, outputs):
     return input_image, detected_vehicles
 
 # Load class names.
-classesFile = "/content/drive/MyDrive/Colab Notebooks/coco.names"
+classesFile = "coco.names"
 classes = None
 with open(classesFile, 'rt') as f:
 	classes = f.read().rstrip('\n').split('\n')
 
 # Give the weight files to the model and load the network using them.
-modelWeights = "/content/drive/MyDrive/Colab Notebooks/yolov5m.onnx"
+modelWeights = "yolov5m.onnx"
 net = cv2.dnn.readNetFromONNX (modelWeights)
 
 #setUp 
-cred = credentials.Certificate("/content/drive/MyDrive/rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
+cred = credentials.Certificate("rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json")
 firebase_admin.initialize_app(cred , {'storageBucket':'rasd-d3906.appspot.com'}) # run once ( database config )
 
 
@@ -195,7 +195,7 @@ firebaseConfig={
       "storageBucket": "rasd-d3906.appspot.com",
       "messagingSenderId": "631946154635",
       "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
-      'serviceAccount': '/content/drive/MyDrive/rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
+      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
       }
 # firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
 # storage = firebase.storage() #storage
@@ -233,7 +233,7 @@ def print_results(video, filename, limit=None):
         #print("video",video)
 
         print("Loading model ...")      
-        model = load_model('/content/drive/MyDrive/TEST_DATA/All_Model_MobileNetV2_newNormal2.h5')
+        model = load_model('All_Model_MobileNetV2_newNormal2.h5')
         Q = deque(maxlen=128)
         vs = cv2.VideoCapture(video)
         writer = None
