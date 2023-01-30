@@ -349,7 +349,7 @@ def print_results(video, filename, limit=None):
                 'video_url': storage.child(new_name).get_url(None)
             })
         else:
-          storage.delete(filename) # delete the video ( if it is not violation )
+          storage.delete(filename, token = 'any') # delete the video ( if it is not violation )
           print("deleted")
 
 firebase = pyrebase.initialize_app(firebaseConfig) # for storage configure 
