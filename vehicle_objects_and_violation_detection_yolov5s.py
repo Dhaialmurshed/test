@@ -221,7 +221,7 @@ def calcDecision(trueCountArray):
 # model function which process the video frame by frame
 def print_results(video, filename, limit=None):
         print("Loading model ...")      
-        model = load_model('All_Model_MobileNetV2_newNormal2.h5') # loads our model to further process the frame
+        model = load_model('All_Model_MobileNetV2_newNormal2-2.h5') # loads our model to further process the frame
         Q = deque(maxlen=128)
         vs = cv2.VideoCapture(video) # capture the video
         writer = None
