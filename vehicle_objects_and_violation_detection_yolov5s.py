@@ -339,7 +339,7 @@ def print_results(video, filename, limit=None):
                 'id': doc_ref.id,
                 'status': 0,
                 'v_type': 'null',
-                'date': datetime_ist.strftime('%Y:%m:%d'),
+                'date': datetime_ist.strftime('%Y/%m/%d'),
                 'time': datetime_ist.strftime('%H:%M:%S '),
             })
             # add the video to the report (sub collection)
