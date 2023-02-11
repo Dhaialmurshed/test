@@ -197,7 +197,7 @@ firebaseConfig={
       "storageBucket": "rasd-d3906.appspot.com",
       "messagingSenderId": "631946154635",
       "appId": "1:631946154635:android:57200f3f24d236d430fa8e",
-      'serviceAccount': '/content/drive/MyDrive/rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
+      'serviceAccount': 'rasd-d3906-firebase-adminsdk-1djor-9976e852c3.json'
       }
 
 
@@ -273,7 +273,6 @@ def print_results(video, filename, limit=None):
 
             # make predictions on the frame and then update the predictions queue
             preds = model.predict(np.expand_dims(frame, axis=0),verbose=0)[0]
-            # print("preds",preds)
             Q.append(preds)
 
             # perform prediction averaging over the current history of previous predictions
@@ -289,17 +288,17 @@ def print_results(video, filename, limit=None):
             else:
                text_color = (0, 255, 0)
 
-            text = "Violation: {} preds:{}".format(label,preds)
-            FONT = cv2.FONT_HERSHEY_SIMPLEX 
-            cv2.putText(output, text, (35, 50), FONT,1.25, text_color, 3)
-            #check if the video writer is None
-            if writer is None:
-              # initialize our video writer
-              fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-              writer = cv2.VideoWriter(f'anotherviotest10Feb/{filename}', fourcc, 30,(W, H), True)
+#             text = "Violation: {} preds:{}".format(label,preds)
+#             FONT = cv2.FONT_HERSHEY_SIMPLEX 
+#             cv2.putText(output, text, (35, 50), FONT,1.25, text_color, 3)
+#             #check if the video writer is None
+#             if writer is None:
+#               # initialize our video writer
+#               fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+#               writer = cv2.VideoWriter(filename, fourcc, 30,(W, H), True)
         
-            # write the output frame to disk
-            writer.write(output)
+#             # write the output frame to disk
+#             writer.write(output)
             frameCounter = 0
 
         # release the file pointersq
@@ -309,7 +308,6 @@ def print_results(video, filename, limit=None):
 
             
         decision = countTruePred(Q)
-        print("pred",predCountArray)
         print("prediction array values",Q)
         print("decision for file: ",os.path.split(filename), " ",decision)
         print(type(decision))
