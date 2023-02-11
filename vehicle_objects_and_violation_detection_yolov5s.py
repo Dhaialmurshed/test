@@ -222,7 +222,7 @@ def countTruePred(Q):
 def print_results(video, filename, limit=None):
 
         print("Loading model ...")      
-        model = load_model('the_models_that_works_31jan_goodAcc_LoastAndFound_8feb.h5') # loads our model to further process the frame
+        model = load_model('violationDetectionModel.h5') # loads our model to further process the frame
         Q = []
         vs = cv2.VideoCapture(video) # capture the video
         writer = None
