@@ -1,1 +1,1 @@
-worker: python test_parallel.py
+worker: python vehicle_objects_and_violation_detection_yolov5s.py
