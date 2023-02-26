@@ -42,8 +42,8 @@ import statistics # to calculate mean and median
 #CONFIDENCE_THRESHOLD: Filters low probability detections.
 
 # Constants.
-INPUT_WIDTH = 640
-INPUT_HEIGHT = 640
+INPUT_WIDTH = 288
+INPUT_HEIGHT = 288
 SCORE_THRESHOLD = 0.7
 NMS_THRESHOLD = 0.7
 CONFIDENCE_THRESHOLD = 0.7
@@ -181,7 +181,7 @@ with open(classesFile, 'rt') as f:
 	classes = f.read().rstrip('\n').split('\n')
 
 # Give the weight files to the model and load the network using them.
-modelWeights = "yolov5s.onnx"
+modelWeights = "yolov5s288.onnx"
 net = cv2.dnn.readNetFromONNX (modelWeights)
 
 #setUp firestore and firebase storage access
@@ -254,6 +254,8 @@ def print_results(video, filename, limit=None):
               print('vehicle found') 
             else:
               print('vehicle not found')
+              frameCounter = 0
+              continue
 
             
              
@@ -308,7 +310,7 @@ def print_results(video, filename, limit=None):
 
             
         decision = countTruePred(Q)
-        print("prediction array values",Q)
+        #print("prediction array values",Q)
         print("decision for file: ",os.path.split(filename), " ",decision)
         print(type(decision))
           # if decision was 'True' then it is a violation so we need to rename the file in our firestore storage
@@ -329,7 +331,7 @@ def print_results(video, filename, limit=None):
                 'id': doc_ref.id,
                 'status': 0,
                 'v_type': 'null',
-                'date': datetime_ist.strftime('%Y/%m/%d'),
+                'date': datetime_ist.strftime('%d/%m/%Y'),
                 'time': datetime_ist.strftime('%H:%M:%S '),
             })
             # add the video to the report (sub collection)
