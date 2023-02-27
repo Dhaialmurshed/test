@@ -181,7 +181,7 @@ with open(classesFile, 'rt') as f:
 	classes = f.read().rstrip('\n').split('\n')
 
 # Give the weight files to the model and load the network using them.
-modelWeights = "yolov5s288.onnx"
+modelWeights = "yolov5s.onnx"
 net = cv2.dnn.readNetFromONNX (modelWeights)
 
 #setUp firestore and firebase storage access
